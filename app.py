@@ -238,8 +238,14 @@ html, body, [class*="st-"] {
 }
 
 /* Style "Drag and drop" text */
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    margin-top: 8px !important;
+}
 [data-testid="stFileUploaderDropzone"] small {
-    color: rgba(255,255,255,0.35) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
 }
 /* file info after upload */
 [data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] {
