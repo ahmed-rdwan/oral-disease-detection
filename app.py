@@ -39,8 +39,9 @@ def load_model_and_metadata():
     with open(METADATA_PATH, "r", encoding="utf-8") as f:
         metadata = json.load(f)
 
-    model = keras.models.load_model(MODEL_PATH, safe_mode=False, compile=False)
-
+    # Resolve the preprocessing function BEFORE loading the model.
+    # The model contains a Lambda layer that wraps this function,
+    # so Keras needs it registered as a custom object to deserialize.
     preprocessing = metadata.get("preprocessing", "none")
     if preprocessing == "efficientnet":
         from keras.applications.efficientnet import preprocess_input
@@ -51,6 +52,13 @@ def load_model_and_metadata():
     else:
         def preprocess_input(x):
             return x
+
+    model = keras.models.load_model(
+        MODEL_PATH,
+        safe_mode=False,
+        compile=False,
+        custom_objects={"preprocess_input": preprocess_input},
+    )
 
     return model, metadata, preprocess_input
 
