@@ -5,6 +5,7 @@ Oral Disease Classifier - Streamlit demo app.
 
 import json
 
+import keras
 import numpy as np
 import streamlit as st
 import tensorflow as tf
@@ -21,15 +22,15 @@ def load_model_and_metadata():
     with open(METADATA_PATH, "r", encoding="utf-8") as f:
         metadata = json.load(f)
 
-    model = tf.keras.models.load_model(MODEL_PATH)
+    model = keras.models.load_model(MODEL_PATH)
 
     preprocessing = metadata.get("preprocessing", "none")
     if preprocessing == "efficientnet":
-        from tensorflow.keras.applications.efficientnet import preprocess_input
+        from keras.applications.efficientnet import preprocess_input
     elif preprocessing == "resnet50":
-        from tensorflow.keras.applications.resnet50 import preprocess_input
+        from keras.applications.resnet50 import preprocess_input
     elif preprocessing == "mobilenet_v2":
-        from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+        from keras.applications.mobilenet_v2 import preprocess_input
     else:
         def preprocess_input(x):
             return x
@@ -65,7 +66,7 @@ if uploaded_file is not None:
     with st.spinner("Analyzing..."):
         img = tf.image.resize(np.array(image), IMAGE_SIZE)
         img = tf.cast(img, tf.float32)
-        img = preprocess_input(img)
+        img = preprocess_input(img.numpy())
         img = tf.expand_dims(img, axis=0)
 
         probs = model.predict(img, verbose=0)[0]
