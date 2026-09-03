@@ -228,24 +228,49 @@ html, body, [class*="st-"] {
     border: none !important;
     padding: 0 !important;
 }
+[data-testid="stFileUploader"] > label {
+    display: none !important;
+}
+[data-testid="stFileUploader"] > div {
+    padding-top: 0 !important;
+}
 [data-testid="stFileUploader"] section {
-    background: rgba(168,85,247,0.08) !important;
-    border: 2px dashed rgba(168,85,247,0.30) !important;
-    border-radius: 20px !important;
-    padding: 2rem 1.5rem !important;
-    transition: all 0.3s ease !important;
+    background: linear-gradient(135deg, rgba(168,85,247,0.06), rgba(0,210,255,0.04)) !important;
+    border: 2px dashed rgba(168,85,247,0.25) !important;
+    border-radius: 24px !important;
+    padding: 2.5rem 2rem !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
 }
 [data-testid="stFileUploader"] section:hover {
-    border-color: rgba(168,85,247,0.55) !important;
-    background: rgba(168,85,247,0.12) !important;
-}
-[data-testid="stFileUploader"] label {
-    color: rgba(255,255,255,0.75) !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
+    border-color: rgba(168,85,247,0.50) !important;
+    background: rgba(168,85,247,0.10) !important;
+    box-shadow: 0 8px 40px rgba(168,85,247,0.08) !important;
 }
 [data-testid="stFileUploaderDropzone"] {
     background: transparent !important;
+}
+[data-testid="stFileUploaderDropzone"] span {
+    color: rgba(255,255,255,0.55) !important;
+    font-weight: 500 !important;
+}
+[data-testid="stFileUploaderDropzone"] button {
+    background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(0,210,255,0.20)) !important;
+    border: 1px solid rgba(168,85,247,0.30) !important;
+    color: rgba(255,255,255,0.85) !important;
+    border-radius: 12px !important;
+    padding: 0.5rem 1.5rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+[data-testid="stFileUploaderDropzone"] button:hover {
+    background: linear-gradient(135deg, rgba(168,85,247,0.40), rgba(0,210,255,0.30)) !important;
+    box-shadow: 0 4px 20px rgba(168,85,247,0.20) !important;
+}
+/* file info after upload */
+[data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] {
+    color: rgba(255,255,255,0.50) !important;
 }
 
 /* ── Glassmorphism card ── */
@@ -479,22 +504,12 @@ st.markdown(
 
 # ── Upload Section ───────────────────────────────────────────────────────────
 uploaded_file = st.file_uploader(
-    "Upload a photo of the oral condition",
+    "Upload a photo",
     type=["jpg", "jpeg", "png"],
+    label_visibility="collapsed",
 )
 
-if uploaded_file is None:
-    st.markdown(
-        """
-        <div class="upload-zone">
-            <span class="upload-icon">🔬</span>
-            <div class="upload-title">Drop your image above to begin analysis</div>
-            <span class="upload-formats">JPG · JPEG · PNG</span>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-else:
+if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
 
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
