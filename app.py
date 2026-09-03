@@ -39,179 +39,392 @@ st.set_page_config(
     layout="centered",
 )
 
-# ── Custom CSS for premium look ──────────────────────────────────────────────
+# ── Custom CSS ───────────────────────────────────────────────────────────────
 st.markdown(
     """
 <style>
 /* ── Google Font ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 /* ── Global ── */
 html, body, [class*="st-"] {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif !important;
 }
 
-/* ── Hide default Streamlit branding ── */
+/* ── Hide Streamlit chrome ── */
 #MainMenu, footer, header {visibility: hidden;}
+.stDeployButton {display: none;}
 
-/* ── Animated gradient background ── */
+/* ── Animated background ── */
 .stApp {
-    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    background: #0a0a1a;
+    overflow-x: hidden;
 }
-@keyframes gradientShift {
+.stApp::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(120, 40, 200, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 180, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
+    animation: auroraMove 20s ease-in-out infinite alternate;
+    z-index: 0;
+    pointer-events: none;
+}
+@keyframes auroraMove {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    25%  { transform: translate(-3%, 2%) rotate(1deg); }
+    50%  { transform: translate(2%, -2%) rotate(-0.5deg); }
+    75%  { transform: translate(-1%, 3%) rotate(0.5deg); }
+    100% { transform: translate(3%, -1%) rotate(-1deg); }
+}
+
+/* ── Floating particles effect using pseudo-elements ── */
+.stApp::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 10% 20%, rgba(168,85,247,0.3) 50%, transparent 50%),
+        radial-gradient(2px 2px at 30% 70%, rgba(0,210,255,0.2) 50%, transparent 50%),
+        radial-gradient(1.5px 1.5px at 60% 30%, rgba(236,72,153,0.25) 50%, transparent 50%),
+        radial-gradient(2px 2px at 80% 60%, rgba(168,85,247,0.2) 50%, transparent 50%),
+        radial-gradient(1.5px 1.5px at 45% 90%, rgba(0,210,255,0.3) 50%, transparent 50%),
+        radial-gradient(2px 2px at 90% 10%, rgba(236,72,153,0.15) 50%, transparent 50%);
+    animation: particleFloat 30s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+@keyframes particleFloat {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-100vh); }
+}
+
+/* ── Ensure content is above background ── */
+.block-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Hero title ── */
+.hero-container {
+    text-align: center;
+    padding: 2rem 0 0.5rem;
+    animation: fadeInDown 0.8s ease;
+}
+.hero-icon {
+    font-size: 3.5rem;
+    display: inline-block;
+    animation: toothBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(168,85,247,0.4));
+}
+@keyframes toothBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-8px) scale(1.05); }
+}
+.hero-title {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 2.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #00d2ff 0%, #a855f7 40%, #ec4899 70%, #f97316 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 4s ease infinite;
+    margin: 0.5rem 0 0.3rem;
+    letter-spacing: -1px;
+}
+@keyframes gradientText {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
-
-/* ── Hero title ── */
-.hero-title {
-    text-align: center;
-    font-size: 2.8rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #00d2ff 0%, #a855f7 50%, #ec4899 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.1rem;
-    animation: fadeInDown 1s ease;
-}
 .hero-sub {
-    text-align: center;
-    color: rgba(255,255,255,0.55);
-    font-size: 1rem;
+    color: rgba(255,255,255,0.45);
+    font-size: 0.95rem;
     font-weight: 400;
-    margin-bottom: 2rem;
-    animation: fadeInUp 1.2s ease;
+    letter-spacing: 0.5px;
+}
+
+/* ── Glowing divider ── */
+.glow-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.5), rgba(0,210,255,0.3), transparent);
+    border: none;
+    margin: 1.5rem 0 2rem;
+    position: relative;
+}
+.glow-divider::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.15), transparent);
+    filter: blur(3px);
+}
+
+/* ── Upload zone ── */
+.upload-zone {
+    background: linear-gradient(135deg, rgba(168,85,247,0.06), rgba(0,210,255,0.04));
+    border: 2px dashed rgba(168,85,247,0.25);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 1s ease;
+}
+.upload-zone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.05), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 100%; }
+}
+.upload-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.8rem;
+    animation: uploadPulse 2.5s ease-in-out infinite;
+}
+@keyframes uploadPulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50%      { transform: scale(1.1); opacity: 1; }
+}
+.upload-title {
+    color: rgba(255,255,255,0.80);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+.upload-formats {
+    color: rgba(255,255,255,0.30);
+    font-size: 0.8rem;
+    display: inline-block;
+    background: rgba(255,255,255,0.05);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    margin-top: 0.5rem;
+}
+
+/* ── Style Streamlit uploader ── */
+[data-testid="stFileUploader"] {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+[data-testid="stFileUploader"] section {
+    background: rgba(168,85,247,0.08) !important;
+    border: 2px dashed rgba(168,85,247,0.30) !important;
+    border-radius: 20px !important;
+    padding: 2rem 1.5rem !important;
+    transition: all 0.3s ease !important;
+}
+[data-testid="stFileUploader"] section:hover {
+    border-color: rgba(168,85,247,0.55) !important;
+    background: rgba(168,85,247,0.12) !important;
+}
+[data-testid="stFileUploader"] label {
+    color: rgba(255,255,255,0.75) !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+}
+[data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
 }
 
 /* ── Glassmorphism card ── */
 .glass-card {
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 20px;
-    padding: 2rem 2rem 1.5rem;
-    margin: 1.5rem 0;
-    animation: fadeIn 1s ease;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 1.8rem;
+    margin: 1.2rem 0;
+    animation: fadeIn 0.8s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent);
 }
 .glass-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.15);
+    transform: translateY(-4px);
+    border-color: rgba(168,85,247,0.15);
+    box-shadow: 0 20px 60px rgba(168, 85, 247, 0.10), 0 0 40px rgba(0, 210, 255, 0.05);
+}
+
+/* ── Image display ── */
+[data-testid="stImage"] img {
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.35);
+    transition: transform 0.4s ease;
+}
+[data-testid="stImage"] img:hover {
+    transform: scale(1.01);
 }
 
 /* ── Result badge ── */
-.result-badge {
-    text-align: center;
-    padding: 1.5rem;
-    border-radius: 16px;
-    background: linear-gradient(135deg, rgba(168,85,247,0.20), rgba(236,72,153,0.20));
-    border: 1px solid rgba(168,85,247,0.25);
-    margin: 1rem 0;
+.result-container {
     animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
-.result-badge h2 {
-    margin: 0;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #e0e0ff;
+.result-badge {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(168,85,247,0.12), rgba(0,210,255,0.08));
+    border: 1px solid rgba(168,85,247,0.15);
+    position: relative;
+    overflow: hidden;
 }
-.result-badge .confidence {
-    font-size: 2.5rem;
+.result-badge::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(transparent, rgba(168,85,247,0.05), transparent 30%);
+    animation: rotateConic 8s linear infinite;
+}
+@keyframes rotateConic {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.result-label {
+    position: relative;
+    color: rgba(255,255,255,0.45);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+.result-class {
+    position: relative;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0f0ff;
+    margin: 0.3rem 0;
+    text-shadow: 0 0 30px rgba(168,85,247,0.3);
+}
+.result-confidence {
+    position: relative;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 3.2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #00d2ff, #a855f7);
+    background: linear-gradient(135deg, #00d2ff, #a855f7, #ec4899);
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradientText 3s ease infinite;
+    line-height: 1.2;
+}
+.result-conf-label {
+    position: relative;
+    color: rgba(255,255,255,0.30);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
 }
 
 /* ── Probability bars ── */
+.probs-title {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+}
 .prob-row {
     display: flex;
     align-items: center;
-    margin: 0.5rem 0;
-    gap: 0.7rem;
+    margin: 0.65rem 0;
+    gap: 0.8rem;
 }
 .prob-label {
-    color: rgba(255,255,255,0.80);
-    font-size: 0.85rem;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.83rem;
     font-weight: 500;
-    min-width: 140px;
+    min-width: 135px;
 }
 .prob-bar-bg {
     flex: 1;
-    height: 10px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
     overflow: hidden;
+    position: relative;
 }
 .prob-bar-fill {
     height: 100%;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #a855f7, #ec4899);
-    transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-radius: 10px;
+    background: linear-gradient(90deg, #a855f7, #ec4899, #f97316);
+    background-size: 200% 100%;
+    animation: barGradient 3s ease infinite;
+    transition: width 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 0 10px rgba(168,85,247,0.3);
+}
+@keyframes barGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+.prob-bar-fill.top {
+    background: linear-gradient(90deg, #00d2ff, #a855f7);
+    box-shadow: 0 0 15px rgba(0,210,255,0.3);
 }
 .prob-value {
-    color: rgba(255,255,255,0.60);
+    color: rgba(255,255,255,0.50);
     font-size: 0.8rem;
-    font-weight: 500;
-    min-width: 50px;
+    font-weight: 600;
+    min-width: 48px;
     text-align: right;
+    font-family: 'Space Grotesk', sans-serif !important;
 }
 
-/* ── Upload area ── */
-[data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.04);
-    border: 2px dashed rgba(168,85,247,0.30);
-    border-radius: 16px;
-    padding: 1rem;
-    transition: border-color 0.3s ease;
-}
-[data-testid="stFileUploader"]:hover {
-    border-color: rgba(168,85,247,0.60);
-}
-
-/* ── Image styling ── */
-[data-testid="stImage"] img {
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-}
-
-/* ── Warning at bottom ── */
+/* ── Bottom warning ── */
 .bottom-warning {
     text-align: center;
-    color: rgba(255,255,255,0.35);
-    font-size: 0.78rem;
-    padding: 1.5rem 1rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.25);
+    font-size: 0.72rem;
+    padding: 2rem 1.5rem;
     margin-top: 3rem;
-    animation: fadeIn 2s ease;
-}
-.bottom-warning span {
-    color: rgba(255, 200, 50, 0.50);
-}
-
-/* ── Divider ── */
-.fancy-divider {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.40), transparent);
-    border: none;
-    margin: 1.5rem 0;
-}
-
-/* ── Spinner override ── */
-.stSpinner > div {
-    border-top-color: #a855f7 !important;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    letter-spacing: 0.3px;
+    line-height: 1.6;
 }
 
 /* ── Animations ── */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-25px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.7) translateY(20px); }
+    60%  { transform: scale(1.03) translateY(-3px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -252,32 +465,31 @@ IMAGE_SIZE = tuple(metadata["image_size"])
 CLASS_NAMES = metadata["class_names"]
 
 # ── Hero Section ─────────────────────────────────────────────────────────────
-st.markdown('<div class="hero-title">🦷 Oral Disease Classifier</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="hero-sub">AI-powered detection for common oral conditions · Upload a photo to get started</div>',
+    """
+    <div class="hero-container">
+        <span class="hero-icon">🦷</span>
+        <div class="hero-title">Oral Disease Classifier</div>
+        <div class="hero-sub">AI-powered detection for common oral conditions</div>
+    </div>
+    <div class="glow-divider"></div>
+    """,
     unsafe_allow_html=True,
 )
-st.markdown('<div class="fancy-divider"></div>', unsafe_allow_html=True)
 
 # ── Upload Section ───────────────────────────────────────────────────────────
 uploaded_file = st.file_uploader(
-    "📸  Upload a photo of the oral condition",
+    "Upload a photo of the oral condition",
     type=["jpg", "jpeg", "png"],
-    label_visibility="collapsed",
 )
 
 if uploaded_file is None:
-    # Show instructions when no file uploaded
     st.markdown(
         """
-        <div class="glass-card" style="text-align:center;">
-            <p style="font-size:2.5rem; margin-bottom:0.5rem;">📤</p>
-            <p style="color:rgba(255,255,255,0.7); font-size:1rem; font-weight:500; margin:0;">
-                Drag & drop or click to upload an oral image
-            </p>
-            <p style="color:rgba(255,255,255,0.35); font-size:0.85rem; margin-top:0.4rem;">
-                Supported: JPG, JPEG, PNG
-            </p>
+        <div class="upload-zone">
+            <span class="upload-icon">🔬</span>
+            <div class="upload-title">Drop your image above to begin analysis</div>
+            <span class="upload-formats">JPG · JPEG · PNG</span>
         </div>
         """,
         unsafe_allow_html=True,
@@ -285,12 +497,11 @@ if uploaded_file is None:
 else:
     image = Image.open(uploaded_file).convert("RGB")
 
-    # Display image inside a glass card
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.image(image, caption="Uploaded image", use_container_width=True)
+    st.image(image, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-    with st.spinner("🔬 Analyzing image..."):
+    with st.spinner("🔬 Analyzing..."):
         img = tf.image.resize(np.array(image), IMAGE_SIZE)
         img = tf.cast(img, tf.float32)
         img = preprocess_input(img.numpy())
@@ -303,34 +514,34 @@ else:
 
     top_class, top_prob = ranked[0]
 
-    # Result badge
+    # ── Result badge ──
     st.markdown(
         f"""
-        <div class="result-badge">
-            <p style="color:rgba(255,255,255,0.50); font-size:0.85rem; margin:0 0 0.3rem;">Detected Condition</p>
-            <h2>{top_class.replace("_", " ")}</h2>
-            <p class="confidence">{top_prob:.1%}</p>
-            <p style="color:rgba(255,255,255,0.40); font-size:0.8rem; margin:0;">confidence</p>
+        <div class="result-container">
+            <div class="result-badge">
+                <div class="result-label">Detected Condition</div>
+                <div class="result-class">{top_class.replace("_", " ")}</div>
+                <div class="result-confidence">{top_prob:.1%}</div>
+                <div class="result-conf-label">confidence</div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # All probabilities
+    # ── Probabilities ──
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.markdown(
-        '<p style="color:rgba(255,255,255,0.65); font-size:0.9rem; font-weight:600; margin-bottom:0.8rem;">📊 All Predictions</p>',
-        unsafe_allow_html=True,
-    )
+    st.markdown('<div class="probs-title">📊 All Predictions</div>', unsafe_allow_html=True)
 
     bars_html = ""
-    for cls, prob in ranked:
-        width = max(prob * 100, 1)
+    for i, (cls, prob) in enumerate(ranked):
+        width = max(prob * 100, 0.5)
+        fill_class = "prob-bar-fill top" if i == 0 else "prob-bar-fill"
         bars_html += f"""
         <div class="prob-row">
             <span class="prob-label">{cls.replace("_", " ")}</span>
             <div class="prob-bar-bg">
-                <div class="prob-bar-fill" style="width: {width:.1f}%;"></div>
+                <div class="{fill_class}" style="width: {width:.1f}%;"></div>
             </div>
             <span class="prob-value">{prob:.1%}</span>
         </div>
@@ -340,13 +551,12 @@ else:
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-# ── Warning at the very bottom ───────────────────────────────────────────────
+# ── Bottom warning ───────────────────────────────────────────────────────────
 st.markdown(
     """
     <div class="bottom-warning">
-        <span>⚠️</span> Educational / portfolio demo only. This model is NOT a medical device
-        and must not be used for real diagnosis. Always consult a dentist or doctor
-        for any oral health concern.
+        ⚠️ Educational / portfolio demo only · Not a medical device ·
+        Always consult a dentist or doctor for any oral health concern
     </div>
     """,
     unsafe_allow_html=True,
