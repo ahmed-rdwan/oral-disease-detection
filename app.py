@@ -171,56 +171,8 @@ html, body, [class*="st-"] {
     filter: blur(3px);
 }
 
-/* ── Upload zone ── */
-.upload-zone {
-    background: linear-gradient(135deg, rgba(168,85,247,0.06), rgba(0,210,255,0.04));
-    border: 2px dashed rgba(168,85,247,0.25);
-    border-radius: 24px;
-    padding: 3rem 2rem;
-    text-align: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    animation: fadeInUp 1s ease;
-}
-.upload-zone::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.05), transparent);
-    animation: shimmer 3s ease-in-out infinite;
-}
-@keyframes shimmer {
-    0%   { left: -100%; }
-    100% { left: 100%; }
-}
-.upload-icon {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 0.8rem;
-    animation: uploadPulse 2.5s ease-in-out infinite;
-}
-@keyframes uploadPulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50%      { transform: scale(1.1); opacity: 1; }
-}
-.upload-title {
-    color: rgba(255,255,255,0.80);
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-}
-.upload-formats {
-    color: rgba(255,255,255,0.30);
-    font-size: 0.8rem;
-    display: inline-block;
-    background: rgba(255,255,255,0.05);
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    margin-top: 0.5rem;
-}
+
+
 
 /* ── Style Streamlit uploader ── */
 [data-testid="stFileUploader"] {
@@ -255,18 +207,33 @@ html, body, [class*="st-"] {
     color: rgba(255,255,255,0.55) !important;
     font-weight: 500 !important;
 }
+/* Fix double-text button: hide original text, replace with clean label */
 [data-testid="stFileUploaderDropzone"] button {
     background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(0,210,255,0.20)) !important;
     border: 1px solid rgba(168,85,247,0.30) !important;
-    color: rgba(255,255,255,0.85) !important;
+    color: transparent !important;
     border-radius: 12px !important;
     padding: 0.5rem 1.5rem !important;
-    font-weight: 600 !important;
+    font-size: 0 !important;
     transition: all 0.3s ease !important;
+    position: relative;
+    min-width: 140px;
+}
+[data-testid="stFileUploaderDropzone"] button::after {
+    content: '📁 Browse Files';
+    color: rgba(255,255,255,0.85);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
 }
 [data-testid="stFileUploaderDropzone"] button:hover {
     background: linear-gradient(135deg, rgba(168,85,247,0.40), rgba(0,210,255,0.30)) !important;
     box-shadow: 0 4px 20px rgba(168,85,247,0.20) !important;
+}
+/* Style "Drag and drop" text */
+[data-testid="stFileUploaderDropzone"] small {
+    color: rgba(255,255,255,0.35) !important;
 }
 /* file info after upload */
 [data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] {
