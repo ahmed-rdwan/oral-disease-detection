@@ -4,6 +4,8 @@ Oral Disease Classifier - Streamlit demo app.
 """
 
 import json
+import os
+import subprocess
 
 import keras
 import numpy as np
@@ -14,6 +16,21 @@ from PIL import Image
 MODEL_PATH = "model.keras"
 METADATA_PATH = "metadata.json"
 
+# --- Git LFS: ensure the real model file is present, not just a pointer ---
+def _ensure_lfs():
+    """Pull Git-LFS files if the model is still a pointer."""
+    if not os.path.exists(MODEL_PATH):
+        return
+    with open(MODEL_PATH, "rb") as f:
+        header = f.read(50)
+    if header.startswith(b"version https://git-lfs"):
+        st.info("⏳ Downloading model from Git LFS …")
+        subprocess.run(["git", "lfs", "install"], cwd=os.getcwd(), check=True)
+        subprocess.run(["git", "lfs", "pull"], cwd=os.getcwd(), check=True)
+        st.info("✅ Model downloaded!")
+
+_ensure_lfs()
+
 st.set_page_config(page_title="Oral Disease Classifier", page_icon="🦷")
 
 
@@ -22,7 +39,7 @@ def load_model_and_metadata():
     with open(METADATA_PATH, "r", encoding="utf-8") as f:
         metadata = json.load(f)
 
-    model = keras.models.load_model(MODEL_PATH)
+    model = keras.models.load_model(MODEL_PATH, safe_mode=False, compile=False)
 
     preprocessing = metadata.get("preprocessing", "none")
     if preprocessing == "efficientnet":
