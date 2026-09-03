@@ -231,6 +231,12 @@ html, body, [class*="st-"] {
     background: linear-gradient(135deg, rgba(168,85,247,0.40), rgba(0,210,255,0.30)) !important;
     box-shadow: 0 4px 20px rgba(168,85,247,0.20) !important;
 }
+/* إخفاء العناصر الداخلية التي تحتوي على النص الافتراضي */
+[data-testid="stFileUploaderDropzone"] button span,
+[data-testid="stFileUploaderDropzone"] button div {
+    display: none !important;
+}
+
 /* Style "Drag and drop" text */
 [data-testid="stFileUploaderDropzone"] small {
     color: rgba(255,255,255,0.35) !important;
