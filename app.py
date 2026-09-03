@@ -239,13 +239,25 @@ html, body, [class*="st-"] {
 
 /* Style "Drag and drop" text */
 [data-testid="stFileUploaderDropzoneInstructions"] {
-    margin-top: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"]::before {
+    content: '☁️ Drag and drop your image here';
+    display: block !important;
+    color: rgba(255, 255, 255, 0.90) !important;
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    font-family: 'Space Grotesk', 'Inter', sans-serif !important;
+    letter-spacing: 0.3px !important;
+    margin-bottom: 2px !important;
 }
 [data-testid="stFileUploaderDropzone"] small {
-    color: rgba(255, 255, 255, 0.75) !important;
-    font-size: 0.95rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.2px !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+    font-size: 0.8rem !important;
 }
 /* file info after upload */
 [data-testid="stFileUploader"] [data-testid="stMarkdownContainer"] {
